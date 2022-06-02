@@ -1,12 +1,12 @@
-import { defineUserConfig } from 'vuepress'
-import type { DefaultThemeOptions } from 'vuepress'
+import { defineUserConfig } from "vuepress";
+import type { DefaultThemeOptions } from "vuepress";
 
 export default defineUserConfig<DefaultThemeOptions>({
-  base: '/v3confirm/',
-  lang: 'en-US',
-  title: 'malekim/v3confirm',
+  base: "/vue-dialog/",
+  lang: "en-US",
+  title: "walisoncm/vue-dialog",
   themeConfig: {
-    repo: 'malekim/v3confirm',
+    repo: "walisoncm/vue-dialog",
     contributors: false,
   },
-})
+});

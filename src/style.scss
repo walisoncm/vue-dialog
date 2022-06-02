@@ -1,0 +1,92 @@
+.vd-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  z-index: 1000;
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.349);
+  }
+
+  &__content {
+    margin: auto;
+    max-width: fit-content;
+    max-height: fit-content;
+    box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.63);
+    border-radius: 5px;
+    z-index: 1;
+    background-color: white;
+  }
+}
+
+.vd-card {
+  &__title {
+    padding: 0.85rem;
+    font-size: 1.3rem;
+    border-radius: 4px 4px 0 0;
+  }
+
+  &__content {
+    padding: 0.85rem;
+    white-space: pre-wrap;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    padding: 0.85rem;
+    border-radius: 0 0 4px 4px;
+  }
+}
+
+.vd-btn {
+  position: relative;
+  border-radius: 4px;
+  height: 2.25rem;
+  padding-inline: 1rem;
+  min-width: 100px;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &--elevated {
+    background-color: green;
+    color: white;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+    
+    &:hover {
+      box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+    }
+  }
+
+  &--outlined {
+    color: green;
+    border: 1px solid;
+
+    &:hover {
+      .vd-btn__overlay {
+        opacity: 0.04;
+      }
+    }
+  }
+}

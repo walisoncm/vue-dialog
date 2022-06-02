@@ -1,70 +1,62 @@
-import * as vue from 'vue'
-import { defineComponent, nextTick, Plugin } from 'vue'
-import { mount } from '@vue/test-utils'
-import VueConfirmPlugin from '@/index'
-import { useConfirm } from '@/index'
-import type { ConfirmOptions } from '@/index'
-import { directive } from '@babel/types'
-
-const clearDocument = () => {
-  document.body.innerHTML = ''
-}
+import * as vue from "vue";
+import VueDialogPlugin from "@/index";
+import { useDialog } from "@/index";
 
 const TestComponent = {
-  name: 'test-component',
+  name: "test-component",
   setup() {
-    const confirm: any = useConfirm()
+    const dialog: any = useDialog();
     const show = async () => {
-      const ok = await confirm.show('Are you sure?')
-    }
+      const ok = await dialog.show("Are you sure?");
+    };
 
-    return () => vue.h(
-      'div', {
-        class: 'component',
-      },
-      [
-        vue.h(
-          'button', {
-            class: 'button',
-            onClick: () => show()
-          }
-        )
-      ]
-    )
-  }
-}
+    return () =>
+      vue.h(
+        "div",
+        {
+          class: "component",
+        },
+        [
+          vue.h("button", {
+            class: "button",
+            onClick: () => show(),
+          }),
+        ]
+      );
+  },
+};
 
 const App = {
   components: {
     TestComponent,
   },
   setup() {
-    return () => vue.h('div', { class: 'main' }, [
-      vue.h('div', {
-        id: 'confirm',
-      }),
-      vue.h(TestComponent),
-    ])
+    return () =>
+      vue.h("div", { class: "main" }, [
+        vue.h("div", {
+          id: "dialog",
+        }),
+        vue.h(TestComponent),
+      ]);
   },
-}
+};
 
-describe('exports', () => {
-  it('exports', () => {
-    expect(typeof VueConfirmPlugin).toEqual('function')
-    expect(typeof useConfirm).toEqual('function')
-    // expect(ConfirmOptions).toEqual('object')
-  })
-})
+describe("exports", () => {
+  it("exports", () => {
+    expect(typeof VueDialogPlugin).toEqual("function");
+    expect(typeof useDialog).toEqual("function");
+  });
+});
 
-describe('plugin', () => {
-  it('Loads plugin', () => {
-    const app = vue.createApp(App)
-    const provideSpy = jest.spyOn(app, 'provide')
+describe("plugin", () => {
+  it("Loads plugin", () => {
+    const app = vue.createApp(App);
+    const provideSpy = jest.spyOn(app, "provide");
 
-    expect(provideSpy).toHaveBeenCalledTimes(0)
+    expect(provideSpy).toHaveBeenCalledTimes(0);
 
-    app.use(VueConfirmPlugin)
+    app.use(VueDialogPlugin);
 
-    expect(provideSpy).toHaveBeenCalledTimes(1)
-  })
-})
+    expect(provideSpy).toHaveBeenCalledTimes(1);
+  });
+});

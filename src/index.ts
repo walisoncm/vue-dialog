@@ -1,45 +1,78 @@
-import { createApp, inject, Plugin, nextTick } from 'vue'
+import { createApp, inject, type Plugin, nextTick, type Component } from "vue";
 
-import { renderConfirm } from '@/confirm'
+import { renderDialog } from "./dialog";
 
-const confirmKey = 'confirm'
-interface ConfirmOptions {
-  root?: string
-  yesText?: string
-  noText?: string
+const dialogKey = "ok";
+
+interface DialogOptions {
+  width?: string;
+  color?: string;
+  title?: string;
+  btnOk?: string;
+  btnCancel?: string;
+  props?: object;
+  persistent?: boolean;
 }
 
-const plugin = (options?: ConfirmOptions) => {
-  return {
-    show: (question: string) => {
-      const rootID = !options?.root ? '#app' : options.root
-      return new Promise((resolve) => {
-        const yesText = options?.yesText ? options.yesText : 'Yes'
-        const noText = options?.noText ? options.noText : 'No'
+interface VueDialog {
+  show: (
+    content: string | Component,
+    options?: DialogOptions
+  ) => Promise<unknown>;
+}
 
-        const comp = renderConfirm(resolve)
+const plugin = ({ root, plugins }: { root: string; plugins?: Plugin[] }) => {
+  return {
+    show: (content: string | Component, options?: DialogOptions) => {
+      const rootID = root;
+
+      return new Promise((resolve) => {
+        const title = options?.title ? options.title : "Confirm";
+        const btnOk = options?.btnOk ? options.btnOk : "Ok";
+        const btnCancel = options?.btnCancel ? options.btnCancel : "Cancel";
+
+        const comp = renderDialog(resolve);
 
         nextTick(() => {
-          return createApp(comp, {
-            text: question,
-            yesText: yesText,
-            noText: noText,
-          }).mount(rootID)
-        })
-      })
+          const dialogApp = createApp(comp, {
+            color: options?.color,
+            width: options?.width,
+            title: title,
+            content: content,
+            contentProps: options?.props,
+            btnOk: btnOk,
+            btnCancel: btnCancel,
+            persistent: options?.persistent,
+          });
+
+          if (plugins) {
+            plugins.forEach((plugin) => {
+              dialogApp.use(plugin);
+            });
+          }
+
+          dialogApp.mount(rootID);
+
+          return dialogApp;
+        });
+      });
     },
-  }
-}
+  };
+};
 
-const VueConfirmPlugin: Plugin = (App, options?: ConfirmOptions) => {
-  const inter = plugin(options)
-  App.provide(confirmKey, inter)
-}
+const VueDialogPlugin: Plugin = (
+  App,
+  { root, plugins }: { root: string; plugins?: Plugin[] }
+) => {
+  const inter = plugin({ root, plugins });
+  App.provide(dialogKey, inter);
+};
 
-const useConfirm = (customKey = ''): unknown => {
-  return inject(customKey !== '' ? customKey : confirmKey)
-}
+const useDialog = (customKey = ""): VueDialog => {
+  return inject(customKey !== "" ? customKey : dialogKey) as VueDialog;
+};
 
-export default VueConfirmPlugin
+export default VueDialogPlugin;
 
-export { useConfirm, ConfirmOptions }
+export { useDialog };
+export type { DialogOptions };
