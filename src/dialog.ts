@@ -8,6 +8,14 @@ import {
 
 import "./style.scss";
 
+export const IconType = {
+  question: "",
+  info: "info",
+  warn: "warning",
+  error: "close",
+  success: "check",
+};
+
 const renderDialog = (
   resolve: (value: boolean | PromiseLike<boolean>) => void
 ): ReturnType<typeof defineComponent> => {
@@ -41,6 +49,10 @@ const renderDialog = (
         type: String,
         required: true,
       },
+      type: {
+        type: String as PropType<keyof typeof IconType>,
+        default: "question",
+      },
       persistent: {
         type: Boolean,
         default: false,
@@ -69,6 +81,31 @@ const renderDialog = (
     },
     render() {
       if (this.isActive) {
+        const actions = [];
+
+        if (this.type === "question")
+          actions.push(
+            h(
+              "button",
+              {
+                class: "vd-btn vd-btn--outlined",
+                onClick: () => this.discard(),
+              },
+              [h("div", { class: "vd-btn__overlay" }), this.btnCancel]
+            )
+          );
+
+        actions.push(
+          h(
+            "button",
+            {
+              class: "vd-btn vd-btn--elevated",
+              onClick: () => this.confirm(),
+            },
+            [h("div", { class: "vd-btn__overlay" }), this.btnOk]
+          )
+        );
+
         return h(
           "div",
           {
@@ -88,12 +125,22 @@ const renderDialog = (
                 h(
                   "div",
                   {
-                    class: "vd-card",
+                    class: `vd-card vd-${this.type}`,
                     style: {
                       minWidth: this.width,
                     },
                   },
                   [
+                    h(
+                      "span",
+                      {
+                        class: "material-icons vd-card__icon",
+                        style: {
+                          marginLeft: this.type === "question" ? 0 : "20px",
+                        },
+                      },
+                      IconType[this.type]
+                    ),
                     h(
                       "header",
                       {
@@ -105,40 +152,12 @@ const renderDialog = (
                     ),
                     h(
                       "main",
-                      {
-                        class: "vd-card__content",
-                      },
+                      { class: "vd-card__content" },
                       typeof this.content === "string"
                         ? this.content
                         : [h(this.content, { ...this.contentProps })]
                     ),
-                    h(
-                      "footer",
-                      {
-                        class: "vd-card__actions",
-                      },
-                      [
-                        h(
-                          "button",
-                          {
-                            class: "vd-btn vd-btn--outlined",
-                            onClick: () => this.discard(),
-                          },
-                          [
-                            h("div", { class: "vd-btn__overlay" }),
-                            this.btnCancel,
-                          ]
-                        ),
-                        h(
-                          "button",
-                          {
-                            class: "vd-btn vd-btn--elevated",
-                            onClick: () => this.confirm(),
-                          },
-                          [h("div", { class: "vd-btn__overlay" }), this.btnOk]
-                        ),
-                      ]
-                    ),
+                    h("footer", { class: "vd-card__actions" }, actions),
                   ]
                 ),
               ]

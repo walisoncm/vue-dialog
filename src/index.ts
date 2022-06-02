@@ -11,6 +11,7 @@ interface DialogOptions {
   btnOk?: string;
   btnCancel?: string;
   props?: object;
+  type?: "question" | "info" | "warn" | "error" | "success";
   persistent?: boolean;
 }
 
@@ -42,6 +43,7 @@ const plugin = ({ root, plugins }: { root: string; plugins?: Plugin[] }) => {
             contentProps: options?.props,
             btnOk: btnOk,
             btnCancel: btnCancel,
+            type: options?.type,
             persistent: options?.persistent,
           });
 
