@@ -1,9 +1,9 @@
-# v3confirm
+# vue-dialog
 
 [![codecov](https://codecov.io/gh/malekim/v3confirm/branch/main/graph/badge.svg?token=CFUBKUJKVB)](https://codecov.io/gh/malekim/v3confirm)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-A plugin dedicated for vue3 to show confirm dialog modal. Currently the plugin works only with composition api.
+A plugin dedicated for vue3 to show dialog modal. Currently the plugin works only with composition api.
 
 ## Installation
 
@@ -12,27 +12,27 @@ The plugin can be installed by npm or yarn.
 ### NPM
 
 ```bash
-npm install v3confirm --save
+npm install vue-dialog --save
 ```
 
 ### Yarn
 
 ```bash
-yarn add v3confirm
+yarn add vue-dialog
 ```
 
 ## Usage
 
 ```javascript
 import { createApp } from 'vue'
-import VueConfirmPlugin from 'v3confirm'
+import VueDialogPlugin from 'vue-dialog'
 import App from '@/App.vue'
 
 const app = createApp(App)
-app.use(VueConfirmPlugin, {
-  root: '#confirm',
-  yesText: 'Yes',
-  noText: 'No',
+app.use(VueDialogPlugin, {
+  root: '#dialog',
+  btnOk: 'Ok',
+  btnCancel: 'Cancel',
 })
 app.mount('#app')
 ```
@@ -41,7 +41,7 @@ Remember to have a html handler somewhere with id provided in root option. For e
 
 ```html
 <template>
-  <div id="confirm"></div>
+  <div id="dialog"></div>
 </template>
 ```
 
@@ -54,14 +54,14 @@ Then in component with composition api:
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue'
-  import { useConfirm } from 'v3confirm'
+  import { useDialog } from 'vue-dialog'
 
   export default defineComponent({
     setup: () => {
-      const confirm = useConfirm()
+      const dialog = useDialog()
 
       const deleteAllUsers = () => {
-        confirm.show('Are you sure?').then((ok) => {
+        dialog.show('Are you sure?').then((ok) => {
           if (ok) {
             alert('All users deleted')
           } else {
@@ -71,7 +71,7 @@ Then in component with composition api:
       }
 
       const deleteAllUsersWithAsync = async () => {
-        const ok = await confirm.show('Are you sure?')
+        const ok = await dialog.show('Are you sure?')
 
         if (ok) {
           alert('All users deleted')
@@ -97,29 +97,20 @@ Type: string
 
 Default: none
 
-An HTML element where confirm dialog is attached. It should be empty.
+An HTML element where dialog is attached. It should be empty.
 
-### yesText
+### btnOk
 
 Type string
 
-Default: 'yes'
+Default: 'Ok'
 
 A text used for confirm button.
 
-### noText
+### btnCancel
 
 Type string
 
-Default: 'no'
+Default: 'Cancel'
 
 A text used for decline button.
-
-# Styles
-
-This project is using bulma.io styles. If your project is not using bulma, then you can style confirm for your own or [import](https://bulma.io/documentation/overview/modular/) bulma modal. 
-
-```scss
-@import "bulma/sass/utilities/_all.sass"
-@import "bulma/sass/components/modal.sass"
-```
